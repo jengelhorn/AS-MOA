@@ -2,7 +2,11 @@
 Scripts for allele-specific analysis of transcription factor (TF) binding
 ## Description 
 These scripts were developed to count TF binding data (e.g. generated with MOA-seq) on corresponding positions in F1 hybrids. They assume omni hybrids with B73 as a common mother, so for the moment B73 as one allele is hard coded but this will be flexibilised in the future. We further expect TF binding to be analysed in two conditions, e.g. well-watered and drought. If only one condition was analysed, all parts with cond2 can be commented out and cond2 in the commands can be specified as 0.
-
+## Install
+Most functions are standard on a Linux system. The scripts are in bash and use mainly basic functions. External functions called include 
+- halliftover (https://github.com/ComparativeGenomicsToolkit/hal)
+- bedtools
+- R (libraries dplyr and broom) CHECK
 
 -------------------
 ## halliftover_of_SNPs.sh 
