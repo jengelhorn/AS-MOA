@@ -1,11 +1,11 @@
 # AS-MOA
 Scripts for allele-specific analysis of transcription factor (TF) binding
 ## Description 
-These scripts were developed to count TF binding data (e.g. generated with MOA-seq) on corresponding positions in F1 hybrids. They assume omni hybrids with B73 as a common mother, so for the moment B73 as one allele is hard coded but this will be flexibilised in the future. We further expect TF binding to be analysed in two conditions, e.g. well-watered and drought. If only one condition was analysed, all parts with cond2 can be commented out and cond2 in the commands can be specified as 0.
+These scripts were developed to count TF binding data (e.g. generated with MOA-seq) on corresponding positions in F1 hybrids. They were developed in Maize assuming omni hybrids with B73 as a common mother, so for the moment B73 as one allele is hard coded but this will be flexibilised in the future. The variable parent is specified as "genotype" in the following commands. We further expect TF binding to be analysed in two conditions, e.g. well-watered and drought. If only one condition was analysed, all parts with cond2 can be commented out and cond2 in the commands can be specified as 0.
 ## Install
 Most functions are standard on a Linux system. The scripts are in bash and use mainly basic functions. External functions called include 
 - halliftover (https://github.com/ComparativeGenomicsToolkit/hal)
-- bedtools
+- bedtools (https://bedtools.readthedocs.io/en/latest/index.html)
 - R (libraries dplyr and broom) CHECK
 
 -------------------
@@ -20,10 +20,16 @@ Example command:
 This program generates corresponding coordinates of B73 Positions to be analysed in the genome of the other parent, called "genotype"
 
 - expects a hal file where one genome is called B73 and the other has the same name as specified in "genotype", e.g. Mo17
-- expects an SNP file in the format of XXX
-- generates an output [genotype].B73.hallifted.all.bed in bed formate XXX
-
-To do: Verify from server, check if PATH is needed, improve annotation
+- expects an SNP file in the format of a bed file with B73 (reference) coordinates with Chr.Position.RefrenceAllele.AlternativeAllele as a 4th column
+chr1    15      16      chr1.16.T.A
+chr1    16      17      chr1.17.A.C
+chr1    41      42      chr1.42.T.G
+chr1    51      52      chr1.52.T.C
+- generates an output [genotype].B73.hallifted.all.bed in bed formate with the positions of SNPs in the paternal genome with ChrB73.PositionB73.RefrenceAllele.AlternativeAllele as 4th column
+chr9    68048   68049   chr1.4721.C.T
+chr9    68033   68034   chr1.4736.A.G
+chr9    68031   68032   chr1.4760.A.C
+chr9    68006   68007   chr1.4785.T.G
 
 ---------------------
 ## deduplicate_and_translate_hallifted_SNPs.sh
