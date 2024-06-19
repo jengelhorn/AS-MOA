@@ -104,16 +104,17 @@ This script compiles counting information from the two genomes obtained by halli
 
 
 --------------------------
-
-for g in Ki3	Ki11 A619	B97   CML277	CML322	CML333	CML69	HP301	IL14H Ky21	M162W	Mo17	Mo18W	NC358	Oh43	;do for tr in WW DS; do gawk -v OFS='\t' -v g=$g 'BEGIN{print "NR","Chr","Pos","REFal","ALTal","PosNAM","Genotype","EGcount_B73","EG_counts_NAM","Peak_B73","Peak_NAM","PF","Counts_B73","Counts_NAM"}{if($6=="1/1" && $0~"peak"){if($11>0 && $11<1){if($7>7 || $8>7){print NR,$0}}}}' /netscratch/dep_psl/grp_frommer/Thomas/Results/HybMoa_0819_WWvsDS/custom/counts_STAR_80_EG/${g}/new_25_lines_22_12/B73.${g}.${tr}.q255.PF.GT.RN.csv > ${g}.${tr}.PF.q255.GT.SNPs.CPM7.txt; done; done
-
-----------------------------------------------
 ## Binomial testing of allele-specific binding:
+
+For each hybrid, prepare a table that can be read into R with only sites that carry a SNP in that line, have at least one read on each allele and a count higher than 7 (adjust to a reasonable number, e.g. corresponding to 25 reads in one line, a cut off with read numbers can lead to lower numbers of allele-specific binding sites in lines with lower coverage).
+
+for g in [genotype];do for tr in cond1 cond2; do gawk -v OFS='\t' -v g=$g 'BEGIN{print "NR","Chr","Pos","REFal","ALTal","PosPat","Genotype","EGcount_B73","EG_counts_Pat","Peak_B73","Peak_Pat","PF","Counts_B73","Counts_Pat"}{if($6=="1/1" && $0~"peak"){if($11>0 && $11<1){if($7>7 || $8>7){print NR,$0}}}}' dir/B73.${g}.${tr}.q255.PF.GT.RN.csv > ${g}.${tr}.PF.q255.GT.SNPs.CPM7.txt; done; done
+
 
 ```bash
 Rscript --vanilla Binomial_fdr_SNPs_1222.R ${g}.${tr}.PF.q255.GT.SNPs.CPM7.txt ${g}.${tr}.q255.bino.fdr.CPM7.txt; done; done
 ```
-Adjust names accordingly
+
 
 ----------------------------------------------
 ## Controling for eventual mapping bias
