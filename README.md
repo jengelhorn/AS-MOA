@@ -46,12 +46,14 @@ This program removes duplicated positions from the [genotype].B73.hallifted.all.
 
 - expects [genotype].B73.hallifted.all.bed file in inDIR
 - expects a genome file size for a diploid genome in the form CHROM LENGTH for each Chromosome, where the two parental chromosomes are named B73-[chromosomename] and [genotype]-[chromosomename], chromosomename being the original names used in the hal and bed files in the previous steps
-- generates an output B73.[genotype].ID.hallifted.all.bed in bed formate XXX
-
-To do: Verify from server, check if PATH is needed, improve annotation
+- outDIR will be created
+- generates an output B73.[genotype].ID.hallifted.all.bed and [genotype].B73.ID.hallifted.all.bed in bed formate one with B73 coordinates and paternal position as ChrPat.PositionPat.RefrenceAllele.AlternativeAllele and one with the paternal position and ChrB73.PositionB73.RefrenceAllele.AlternativeAllele
 
 ----------------------
-The output of deduplicate_and_translate_hallifted_SNPs.sh can be used to exclude positions that are not 1:1 mappable in at least two lines from the further analysis. For this, a list of all 1:1 mappable in two lines is generated:
+## Generate a file with 1:1 mappable SNPs
+This step is only necessary when working with several hybrids to generate a pan-cistrome. When working with one hybrid, the SNP file 
+
+The output of deduplicate_and_translate_hallifted_SNPs.sh can be used to exclude positions that are not 1:1 mappable in at least two lines from the further analysis. For this, a list of all 1:1 mappable positions in two lines is generated:
 
 for g in [genotype1] [genotype2] ...; do cat B73.${g}.ID.hallifted.all.bed >> all.ID.hallifted.all.bed; done
 
@@ -94,20 +96,20 @@ Example command:
 
 This script compiles counting information from the two genomes obtained by hallifted_bed_to_count.sh, calculates binding frequencies (BF: B73 counts/ (B73 counts + genotype counts)), read counts per allele, adds information about the position being located in a peak and the presence of an SNP at each position in the respective hybrid (note that values are counted for all SNPs/Pos that are fed in in the beginning (e.g. all biallecic, 1:1 mappable SNPs in the population analysed, not only SNPs in the specific hybrid).  
 
-- expects peak files of the formate XXX
+- expects peak files in bed formate
 - expects to find the four output files of hallifted_bed_to_count.sh in the working directory [dir]
 - expects gzipped bedgraph files containing the counts of an experiment mapped to the diploid genome (they are used to convert the normalised values back into read count values)
 - expects a list of positions that carry an SNP between the two alleles of the specific hybrid in tsv formate from cactus (0-based)
 - generates B73.[genotype].[condition].PF.GT.RN.csv files in the formate Chr(B73)  STop=POS(B73) REFal(B73)  ALTal ID([genotype]chr_[genotype]POS) Genotype (0/0 if [genotype] allele is B73, 1/1 if [genotype] allele is ALTal) normalised_Count(B73)   normalised_Count([genotype]) PEAK(B73) Peak([genotype])  BF (n.p. if no peak in either B73 or [genotype]) read_Count(B73) read_Count([genotype])
 
-To do: check annotation, improve naming of peaks so other formats can be included, correct n.d. to n.p., include next step here with adding a read/normalised count cutoff and only get 1/1 into the command
+
 
 --------------------------
 
 for g in Ki3	Ki11 A619	B97   CML277	CML322	CML333	CML69	HP301	IL14H Ky21	M162W	Mo17	Mo18W	NC358	Oh43	;do for tr in WW DS; do gawk -v OFS='\t' -v g=$g 'BEGIN{print "NR","Chr","Pos","REFal","ALTal","PosNAM","Genotype","EGcount_B73","EG_counts_NAM","Peak_B73","Peak_NAM","PF","Counts_B73","Counts_NAM"}{if($6=="1/1" && $0~"peak"){if($11>0 && $11<1){if($7>7 || $8>7){print NR,$0}}}}' /netscratch/dep_psl/grp_frommer/Thomas/Results/HybMoa_0819_WWvsDS/custom/counts_STAR_80_EG/${g}/new_25_lines_22_12/B73.${g}.${tr}.q255.PF.GT.RN.csv > ${g}.${tr}.PF.q255.GT.SNPs.CPM7.txt; done; done
 
 ----------------------------------------------
-To perform binomial testing of allele-specific binding:
+## Binomial testing of allele-specific binding:
 
 ```bash
 Rscript --vanilla Binomial_fdr_SNPs_1222.R ${g}.${tr}.PF.q255.GT.SNPs.CPM7.txt ${g}.${tr}.q255.bino.fdr.CPM7.txt; done; done
@@ -115,6 +117,7 @@ Rscript --vanilla Binomial_fdr_SNPs_1222.R ${g}.${tr}.PF.q255.GT.SNPs.CPM7.txt $
 Adjust names accordingly
 
 ----------------------------------------------
+## Controling for eventual mapping bias
 To account for mapping bias, a control can be used to eliminate those significant sites that are also biased in control data, e.g. short-read sequencing genomic data. Reads of this data should be shortened to match the read length of the original experiment.
 
 Counting of control reads is performed for the same positions as the experimental data, thus halliftover and translation of SNPs does not have to be repeated. The working directory should be the same as for the original analysis because the outputs of the previous steps are required.
