@@ -20,14 +20,15 @@ Example command:
 This program generates corresponding coordinates of B73 Positions to be analysed in the genome of the other parent, called "genotype"
 
 - expects a hal file where one genome is called B73 and the other has the same name as specified in "genotype", e.g. Mo17
-- expects an SNP file in the format of a bed file with B73 (reference) coordinates with Chr.Position.RefrenceAllele.AlternativeAllele as a 4th column
+- expects an SNP file in the format of a bed file with B73 (reference) coordinates with Chr.Position.RefrenceAllele.AlternativeAllele as a 4th column:
+ ``` 
 chr1    15      16      chr1.16.T.A
 
 chr1    16      17      chr1.17.A.C
 
 chr1    41      42      chr1.42.T.G
 
-chr1    51      52      chr1.52.T.C
+chr1    51      52      chr1.52.T.C```
 - generates an output [genotype].B73.hallifted.all.bed in bed formate with the positions of SNPs in the paternal genome with ChrB73.PositionB73.RefrenceAllele.AlternativeAllele as 4th column
 chr9    68048   68049   chr1.4721.C.T
 chr9    68033   68034   chr1.4736.A.G
