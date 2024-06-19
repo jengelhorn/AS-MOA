@@ -75,13 +75,12 @@ Example command:
 First, this script removes all SNPs not found in at least two lines from the analysis. If this is not desired, the original SNP file can be specified as 1:1map_SNPs. The script then counts the signal on each specified position from the SNP file in both parental genomes and pastes the information together.
 
 - expects a working directory containing B73.[genotype].ID.hallifted.all.bed files from deduplicate_and_translate_hallifted_SNPs.sh
-- expects a SNP file in the format XXX 
+- expects a SNP file in bed file format with the reference Prefix in the chromosome, e.g. B73-chr10       10000000        10000001
 - expects a genome-size file in the same format as mentioned above
-- expects gzipped bedgraph files containing the counts of an experiment mapped to the diploid genome
+- expects gzipped bedgraph files containing the counts of an experiment mapped to the diploid genome, we assume normalised data here mapped to a concatenated genome. For determination of allele-specific binding sites we recommend using only reads that map exactly once to this genome. We recommend normalising as reads per genome coverage e.g. with bamcoverage (https://deeptools.readthedocs.io/en/develop/content/tools/bamCoverage.html)
 - expects names for two conditions, e.g. WW and DS which should stay the same for all following scripts
-- generates four files: B73.[genotype].[cond1].counts.bed  [genotype].B73.[cond1].counts.bed B73.[genotype].[cond2].counts.bed  [genotype].B73.[cond2].counts.bed in the formate XXX
+- generates four files: B73.[genotype].[cond1].counts.bed  [genotype].B73.[cond1].counts.bed B73.[genotype].[cond2].counts.bed  [genotype].B73.[cond2].counts.bed in bed formate with the count as a 4th column
 
-To do: improve annotation, maybe accommodate non-zipped files
 
 --------------------------
 ## counts_to_table.sh
