@@ -6,7 +6,7 @@ These scripts were developed to count TF binding data (e.g. generated with MOA-s
 Most functions are standard on a Linux system. The scripts are in bash and use mainly basic functions. External functions called include 
 - halliftover (https://github.com/ComparativeGenomicsToolkit/hal)
 - bedtools (https://bedtools.readthedocs.io/en/latest/index.html)
-- R (libraries dplyr and broom) CHECK
+- R (libraries dplyr and broom) 
 
 -------------------
 ## halliftover_of_SNPs.sh 
@@ -27,7 +27,7 @@ chr1    16      17      chr1.17.A.C
 chr1    41      42      chr1.42.T.G
 chr1    51      52      chr1.52.T.C
 ```
-- generates an output [genotype].B73.hallifted.all.bed in bed formate with the positions of SNPs in the paternal genome with ChrB73.PositionB73.RefrenceAllele.AlternativeAllele as 4th column
+- generates an output [genotype].B73.hallifted.all.bed in bed formate with the positions of SNPs in the paternal genome with ChrB73.PositionB73.RefrenceAllele.AlternativeAllele as 4th column:
  ```
 chr9    68048   68049   chr1.4721.C.T
 chr9    68033   68034   chr1.4736.A.G
