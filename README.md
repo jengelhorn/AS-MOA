@@ -113,7 +113,7 @@ for g in [genotype];do for tr in cond1 cond2; do gawk -v OFS='\t' -v g=$g 'BEGIN
 ```
 
 ```bash
-Rscript --vanilla Binomial_fdr_SNPs_1222.R ${g}.${tr}.PF.q255.GT.SNPs.CPM7.txt ${g}.${tr}.q255.bino.fdr.CPM7.txt
+Rscript --vanilla Binomial_fdr_SNPs_git.R ${g}.${tr}.PF.q255.GT.SNPs.CPM7.txt ${g}.${tr}.q255.bino.fdr.CPM7.txt
 ```
 
 
