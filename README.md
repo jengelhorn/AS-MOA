@@ -113,10 +113,13 @@ for g in [genotype];do for tr in cond1 cond2; do gawk -v OFS='\t' -v g=$g 'BEGIN
 ```
 
 ```bash
-Rscript --vanilla Binomial_fdr_SNPs_git.R ${g}.${tr}.PF.q255.GT.SNPs.CPM7.txt ${g}.${tr}.q255.bino.fdr.CPM7.txt
+for g in [genotype];do for tr in cond1 cond2; do Rscript --vanilla Binomial_fdr_SNPs_git.R ${g}.${tr}.PF.q255.GT.SNPs.CPM7.txt ${g}.${tr}.q255.bino.fdr.CPM7.txt; done; done
 ```
+To get significant ones at FRD corrected p-value < 0.01:
 
-
+```bash
+for g in [genotype];do do for tr in cond1 cond2; do gawk -v OFS='\t' -v g=$g '{if(NR==1){print $0};if(NR>1 && $17<0.01){print $0}}' ${g}.${tr}.q255.bino.fdr.CPM7.txt > ${g}.${tr}.q255.bino.fdr.01.CPM7.txt; done;done
+```
 ----------------------------------------------
 ## Controling for eventual mapping bias
 To account for mapping bias, a control can be used to eliminate those significant sites that are also biased in control data, e.g. short-read sequencing genomic data. Reads of this data should be shortened to match the read length of the original experiment.
