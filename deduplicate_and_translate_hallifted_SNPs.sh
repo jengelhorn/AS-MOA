@@ -14,21 +14,25 @@ Idir=$2
 gen=$3
 Odir=$4
 
-export PATH="/netscratch/dep_psl/grp_frommer/Thomas/bin/bedops/bin:$PATH"
 
 
  cd ${Idir}
 
-#${g}.B73.hallifted.all.bed
+echo "get duplicates paternal genome"
 
 
 gawk -v OFS='\t' '{print $1$2}' ${g}.B73.hallifted.all.bed | sort | uniq -d > ${g}.B73.hallifted.all.dups_${g}coord.txt
 
+echo "get duplicates maternal genome"
+
 gawk -v OFS='\t' '{print $4}' ${g}.B73.hallifted.all.bed | sort | uniq -d > ${g}.B73.hallifted.all.dups_B73coord.txt
 
 
+echo "remove duplicates paternal genome"
 
 gawk -v OFS='\t' 'NR==FNR{a[$1]=$1; next} !($1$2 in a){print $0}' ${g}.B73.hallifted.all.dups_${g}coord.txt  ${g}.B73.hallifted.all.bed > ${g}.B73.hallifted.all.clean1.bed
+
+echo "remove duplicates maternal genome"
 
 gawk -v OFS='\t' 'NR==FNR{a[$1]=$1; next} !($4 in a){print $0}'  ${g}.B73.hallifted.all.dups_B73coord.txt ${g}.B73.hallifted.all.clean1.bed > ${g}.B73.hallifted.all.clean2.bed
 
