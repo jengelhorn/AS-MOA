@@ -21,13 +21,13 @@ C2=$8
  cd ${dir}
  
  
-echo "retain only deduplicated, biallelic SNPs that occure in two lines from hallifted file"
+echo "retain only deduplicated, biallelic SNPs that occur in two lines from hallifted file"
 
 gawk -v OFS='\t' 'NR==FNR{a[$1$2]=$1$2; next} ($1$2 in a){print $0}' $SNPs B73.${g}.ID.hallifted.all.bed > B73.${g}.ID.hallifted.all.final.bed 
  
 gawk -v OFS='\t' 'NR==FNR{a[$1$3]=$1$3; next} {split($4,pos,".")};("B73-"pos[1]pos[2] in a){print $0}' $SNPs ${g}.B73.ID.hallifted.all.bed > ${g}.B73.ID.hallifted.all.final.bed
 
-echo "bedtool mapping"
+echo "bedtool mapping, counting Signal at each SNP position in both alleles"
 
 zcat ${bed1} | bedtools map -a B73.${g}.ID.hallifted.all.final.bed -b - -g ${gen} -c 4 > B73.${g}.${C1}.counts.bed
 
@@ -36,7 +36,4 @@ zcat ${bed1} | bedtools map -a ${g}.B73.ID.hallifted.all.final.bed -b - -g ${gen
 zcat ${bed2} | bedtools map -a B73.${g}.ID.hallifted.all.final.bed -b - -g ${gen} -c 4 > B73.${g}.${C2}.counts.bed
 
 zcat ${bed2} | bedtools map -a ${g}.B73.ID.hallifted.all.final.bed -b - -g ${gen} -c 4 > ${g}.B73.${C2}.counts.bed
-
-
-##This will give us : Chr start stop ID Value
 
