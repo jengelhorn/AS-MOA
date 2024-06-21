@@ -29,9 +29,9 @@ echo "sort and name peaks"
 
 #Peaks are taken from Narrowpeak files of MACS3
 
-for tr in ${C1};  do sort -k1,1 -k2,2n ${PeakC1} | gawk -v OFS='\t' '{if($2<$3 && $1!~"scaf-alt"){if($4~"peak"){print $1,$2,$3,$4"_"$5}else{print $1,$2,$3,"peak_"NR}}' > ${g}.${tr}.peaks.names.sorted.bed ; done
+for tr in ${C1};  do sort -k1,1 -k2,2n ${PeakC1} | gawk -v OFS='\t' '{if($2<$3 && $1!~"scaf-alt"){if($4~"peak"){print $1,$2,$3,$4"_"$5}else{print $1,$2,$3,"peak_"NR}}}' > ${g}.${tr}.peaks.names.sorted.bed ; done
 
-for tr in ${C2};  do sort -k1,1 -k2,2n ${PeakC2} | gawk -v OFS='\t' '{if($2<$3 && $1!~"scaf-alt"){if($4~"peak"){print $1,$2,$3,$4"_"$5}else{print $1,$2,$3,"peak_"NR}}' > ${g}.${tr}.peaks.names.sorted.bed ; done
+for tr in ${C2};  do sort -k1,1 -k2,2n ${PeakC2} | gawk -v OFS='\t' '{if($2<$3 && $1!~"scaf-alt"){if($4~"peak"){print $1,$2,$3,$4"_"$5}else{print $1,$2,$3,"peak_"NR}}}' > ${g}.${tr}.peaks.names.sorted.bed ; done
 
 echo "sort count files, mark heterozygous sites (scaf-alt)"
 
