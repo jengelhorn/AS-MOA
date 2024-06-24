@@ -127,36 +127,18 @@ To account for mapping bias, a control can be used to eliminate those significan
 Counting of control reads is performed for the same positions as the experimental data, thus halliftover and translation of SNPs does not have to be repeated. The working directory should be the same as for the original analysis because the outputs of the previous steps are required.
 
 --------------------------------
-No script yet for the counting, only commands:
+#get_control_counts.sh
 
 These commands take the list of eligible sites for allele-specific binding (all that went into the binomial test, in our case all inside a peak, with a normalised read count larger than 7 and at least one read in each allele), creates a window in which the control data should be checked (e.g. 65 bp for MOA) and counts the mean normalised read count in this window for each of the two alleles. This is done for one condition only in our case (WW) to have the same threshold for both conditions. For cond2 (DS) we only count the control data on the allele-specific sites to use this data later to exclude sites with above threshold deviations from 1:1 in the control data.
 
+Example code:
+
 ```bash
-for g in  [genotype]	; do gawk -v OFS='\t' -v g=$g '{if(NR>1){print substr($3,2,length($3)-2),$4-33,$4+32,substr($7,2,length($7)-2)}}' ../${g}.WW.q255.bino.fdr.CPM7.txt |  gawk -v OFS='\t' '{if($2<0){print $1,0,$3,$4}else{print $0}}' | sortBed -g /netscratch/dep_psl/grp_frommer/Michael_Thomas/Genomes/Zea_mays/diploid/${g}/ref_B73${g}.fasta.size.new.txt > B73.${g}.65bp.bed; done
-
-
-for g in [genotype] ; do gawk -v OFS='\t' -v g=$g '{if(NR>1){split($7,pos,":"); print substr(pos[1],2,length(pos[1])-1),substr(pos[2],1,length(pos[1])-1)-33,substr(pos[2],1,length(pos[2])-1)+32,substr($7,2,length($7)-2)}}' ../${g}.WW.q255.bino.fdr.CPM7.txt  |  gawk -v OFS='\t' '{if($2<0){print $1,0,$3,$4}else{print $0}}'| sortBed -g /netscratch/dep_psl/grp_frommer/Michael_Thomas/Genomes/Zea_mays/diploid/${g}/ref_B73${g}.fasta.size.new.txt > ${g}.65bp.bed; done
-
-
-for g in  [genotype]; do gawk -v OFS='\t' -v g=$g '{if(NR>1){print substr($3,2,length($3)-2),$4-33,$4+32,substr($7,2,length($7)-2)}}' ../${g}.DS.q255.bino.fdr.01.CPM7.txt |  gawk -v OFS='\t' '{if($2<0){print $1,0,$3,$4}else{print $0}}' | sortBed -g /netscratch/dep_psl/grp_frommer/Michael_Thomas/Genomes/Zea_mays/diploid/${g}/ref_B73${g}.fasta.size.new.txt > B73.${g}.DS.01.65bp.bed; done
-
-for g in [genotype]	; do gawk -v OFS='\t' -v g=$g '{if(NR>1){split($7,pos,":"); print substr(pos[1],2,length(pos[1])-1),substr(pos[2],1,length(pos[1])-1)-33,substr(pos[2],1,length(pos[2])-1)+32,substr($7,2,length($7)-2)}}' ../${g}.DS.q255.bino.fdr.01.CPM7.txt  |  gawk -v OFS='\t' '{if($2<0){print $1,0,$3,$4}else{print $0}}'| sortBed -g /netscratch/dep_psl/grp_frommer/Michael_Thomas/Genomes/Zea_mays/diploid/${g}/ref_B73${g}.fasta.size.new.txt > ${g}.DS.01.65bp.bed; done
-
-
-for g in IL14H; do time gawk -v OFS='\t' '{if($1!~"B73"){a=($3 - $2); if(a>1){for(i=a; i>=1; i--){ print $1, ($3-i),($3-i+1), $4}} else{ print $0 }}}' /netscratch/dep_psl/grp_frommer/Thomas/Results/HybMoa_0819_WWvsDS/bamCoverage/CTRL/EG_norm/B73.${g}.CTRL.RPGCq3.b1.bedgraph| bedtools map -a ./new/${g}.DS.01.65bp.bed -b - -g /netscratch/dep_psl/grp_frommer/Michael_Thomas/Genomes/Zea_mays/diploid/${g}/ref_B73${g}.fasta.size.new.txt -c 4 -o mean > ./new/${g}.DS.01.CTRL.65bp.bed; done
-
-
-for g in 		IL14H ; do time gawk -v OFS='\t' '{if($1!~"B73"){a=($3 - $2); if(a>1){for(i=a; i>=1; i--){ print $1, ($3-i),($3-i+1), $4}} else{ print $0 }}}' /netscratch/dep_psl/grp_frommer/Thomas/Results/HybMoa_0819_WWvsDS/bamCoverage/CTRL/EG_norm/B73.${g}.CTRL.RPGCq3.b1.bedgraph| bedtools map -a ${g}.65bp.bed -b - -g /netscratch/dep_psl/grp_frommer/Michael_Thomas/Genomes/Zea_mays/diploid/${g}/ref_B73${g}.fasta.size.new.txt -c 4 -o mean > ./new/${g}.CTRL.65bp.bed; done
-
-
-
-for g in	IL14H	; do time gawk -v OFS='\t' '{if($1~"B73"){a=($3 - $2); if(a>1){for(i=a; i>=1; i--){ print $1, ($3-i),($3-i+1), $4}} else{ print $0 }}}' /netscratch/dep_psl/grp_frommer/Thomas/Results/HybMoa_0819_WWvsDS/bamCoverage/CTRL/EG_norm/B73.${g}.CTRL.RPGCq3.b1.bedgraph | bedtools map -a B73.${g}.DS.01.65bp.bed -b - -g /netscratch/dep_psl/grp_frommer/Michael_Thomas/Genomes/Zea_mays/diploid/${g}/ref_B73${g}.fasta.size.new.txt -c 4 -o mean > B73.${g}.DS.01.CTRL.65bp.bed; done
-
-
-for g in	IL14H; do time gawk -v OFS='\t' '{if($1~"B73"){a=($3 - $2); if(a>1){for(i=a; i>=1; i--){ print $1, ($3-i),($3-i+1), $4}} else{ print $0 }}}' /netscratch/dep_psl/grp_frommer/Thomas/Results/HybMoa_0819_WWvsDS/bamCoverage/CTRL/EG_norm/B73.${g}.CTRL.RPGCq3.b1.bedgraph | bedtools map -a B73.${g}.65bp.bed -b - -g /netscratch/dep_psl/grp_frommer/Michael_Thomas/Genomes/Zea_mays/diploid/${g}/ref_B73${g}.fasta.size.new.txt -c 4 -o mean > B73.${g}.CTRL.65bp.bed; done
+./get_control_counts.sh [genotype] [dir] [window] [cond1] [cond2] [SNPs_tested_bino_cond1] [genome_size_file] [sig_SNPs_cond2 control_bedgraph]
 ```
+- SNPs_tested_bino_cond1 sig_SNPs_cond2 control_bedgraph are expected to be in the format delivered by Binomial_fdr_SNPs_git.R
 
-To do: write script for this part 
+
 
 ---------------------------------
 ## clean_AFPs_with_CNTRL.sh
@@ -173,5 +155,5 @@ This script takes the control values from both alleles and calculates a binding 
 - expects the binomial test output for both conditions
 - expects names of the conditions (e.g. WW and DS)
 
-To do: improve comments, add cond1 to usage statement
+
 
