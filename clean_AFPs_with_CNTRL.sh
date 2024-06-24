@@ -1,11 +1,11 @@
 #!/bin/bash
-#run by ./clean_AFPs_with_CNTRL.sh genotype dir Control_counts_B73 Control_counts_NAM Binom_test_output Cond1 Cond2 Control_counts_B73_cond2 Control_counts_NAM_cond2 Binom_test_output_cond2 outdir
+#run by ./clean_AFPs_with_CNTRL.sh genotype dir Control_counts_B73 Control_counts_Pat Binom_test_output Cond1 Cond2 Control_counts_B73_cond2 Control_counts_Pat_cond2 Binom_test_output_cond2 outdir
 
 EXPECTED_ARGS=11
 E_BADARGS=11
 if [ $# -ne $EXPECTED_ARGS ]
 then
-  echo "Usage: ./clean_AFPs_with_CNTRL.sh genotype dir Control_counts_B73 Control_counts_NAM Binom_test_output Cond1 Cond2 Control_counts_B73_cond2 Control_counts_NAM_cond2 Binom_test_output_cond2 outdir "
+  echo "Usage: ./clean_AFPs_with_CNTRL.sh genotype dir Control_counts_B73 Control_counts_Pat Binom_test_output Cond1 Cond2 Control_counts_B73_cond2 Control_counts_Pat_cond2 Binom_test_output_cond2 outdir "
   exit $E_BADARGS
 fi
 
@@ -13,19 +13,19 @@ fi
 g=$1
 dir=$2
 C1=$3
-#bedfile containing window which was counted in, e.g. 65 bp and NAM coordinate plus mean count in control data for B73
+#bedfile containing columns 1-3: window which was counted in, e.g. 65 bp; column 4: paternal SNP position for later identification; column 5: mean count of control data for B73
 C2=$4
-#bedfile containing window which was counted in, e.g. 65 bp and NAM coordinate plus mean count in control data for NAM
+#bedfile containing columns 1-3: window which was counted in, e.g. 65 bp; column 4: paternal SNP position; column 5: mean count of control data for paternal allele
 Bino=$5
-#Output file of Binomial_fdr_SNPs_1222.R for cond1
+#Output file of Binomial_fdr_SNPs_git.R for cond1
 cond1=$6
 cond2=$7
 C3=$8
-#bedfile containing window which was counted in, e.g. 65 bp and NAM coordinate plus mean count in control data for B73, in the case here the condition 2 non-significant SNPs are not used to determine the threshold so it is sufficient to just give AFPs with counts here
+#bedfile same formate as C1 but for cond2, in the case here the condition 2 non-significant SNPs are not used to determine the threshold so it is sufficient to just give AFPs with counts here
 C4=$9
-#same as C3 but for NAM coordinate
+#same as C3 but for paternal coordinate
 Bino2=${10}
-#Output file of Binomial_fdr_SNPs_1222.R for cond2
+#Output file of Binomial_fdr_SNPs_git.R for cond2
 out=${11}
 
 
